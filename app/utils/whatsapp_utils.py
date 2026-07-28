@@ -3,7 +3,7 @@ from flask import current_app, jsonify
 import json
 import requests
 
-# from app.services.openai_service import generate_response
+from app.services.openai_service import generate_response
 import re
 
 
@@ -25,9 +25,7 @@ def get_text_message_input(recipient, text):
     )
 
 
-def generate_response(response):
-    # Return text in uppercase
-    return response.upper()
+
 
 
 def send_message(data):
@@ -37,6 +35,9 @@ def send_message(data):
     }
 
     url = f"https://graph.facebook.com/{current_app.config['VERSION']}/{current_app.config['PHONE_NUMBER_ID']}/messages"
+
+    logging.info(f"Sending message to Graph API URL: {url}")
+    logging.info(f"Outgoing payload: {data}")
 
     try:
         response = requests.post(
@@ -50,9 +51,13 @@ def send_message(data):
         requests.RequestException
     ) as e:  # This will catch any general request exception
         logging.error(f"Request failed due to: {e}")
+        if hasattr(e, 'response') and e.response is not None:
+            logging.error(f"Graph API error response body: {e.response.text}")
+
         return jsonify({"status": "error", "message": "Failed to send message"}), 500
     else:
         # Process the response as normal
+        logging.info(f"Graph API response status: {response.status_code}")
         log_http_response(response)
         return response
 
@@ -82,14 +87,13 @@ def process_whatsapp_message(body):
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
     message_body = message["text"]["body"]
 
-    # TODO: implement custom function here
-    response = generate_response(message_body)
+    logging.info(f"Incoming message from wa_id={wa_id} name={name}: {message_body}")
 
     # OpenAI Integration
-    # response = generate_response(message_body, wa_id, name)
-    # response = process_text_for_whatsapp(response)
+    response = generate_response(message_body, wa_id, name)
+    response = process_text_for_whatsapp(response)
 
-    data = get_text_message_input(current_app.config["RECIPIENT_WAID"], response)
+    data = get_text_message_input(wa_id, response)
     send_message(data)
 
 

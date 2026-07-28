@@ -2,96 +2,92 @@ from openai import OpenAI
 import shelve
 from dotenv import load_dotenv
 import os
-import time
 import logging
 
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-OPENAI_ASSISTANT_ID = os.getenv("OPENAI_ASSISTANT_ID")
-client = OpenAI(api_key=OPENAI_API_KEY)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
+# Initialize OpenAI client but point it to Groq
+client = OpenAI(
+    api_key=GROQ_API_KEY,
+    base_url="https://api.groq.com/openai/v1"
+)
 
-def upload_file(path):
-    # Upload a file with an "assistants" purpose
-    file = client.files.create(
-        file=open("../../data/airbnb-faq.pdf", "rb"), purpose="assistants"
-    )
+def get_system_prompt():
+    try:
+        with open("knowledge.md", "r", encoding="utf-8") as f:
+            knowledge = f.read()
+            return (
+                "You are a helpful customer service assistant for our bookstore. You must answer questions based ONLY on the following knowledge base. Be polite and concise.\n\n"
+                "CRITICAL RULES:\n"
+                "1. If the user sends a greeting (like 'hi', 'hello'), your response MUST include a 2-3 line summary of our books (Ponniyin Selvan comics) and their prices. For example: 'Hello! How can I help you? We are currently selling the Ponniyin Selvan comic adaptation. A single book is ₹750, and the full 5-volume set is ₹2999.'\n"
+                "2. ALWAYS verify that the total price of the items mathematically exceeds the free shipping threshold (3999) before claiming it qualifies for free delivery.\n"
+                "3. Note that 2999 is LESS than 3999. Therefore, purchasing just 5 volumes (which costs 2999) DOES NOT qualify for free delivery.\n"
+                "4. To get free delivery, a customer would need to buy items totaling over 3999, such as two sets of 5 volumes (which would cost 5998) or 6 single books (which would cost 4500).\n\n"
+                f"KNOWLEDGE BASE:\n{knowledge}"
+            )
+    except Exception as e:
+        logging.error(f"Failed to read knowledge base: {e}")
+        return "You are a helpful customer service assistant for our bookstore."
 
+def get_fallback_message():
+    try:
+        with open("knowledge.md", "r", encoding="utf-8") as f:
+            knowledge = f.read()
+            return f"I'm sorry, my AI brain is currently experiencing technical difficulties. However, here is our basic information:\n\n{knowledge}"
+    except Exception:
+        return "I'm sorry, I am currently experiencing technical difficulties. Please call us for assistance."
 
-def create_assistant(file):
-    """
-    You currently cannot set the temperature for Assistant via the API.
-    """
-    assistant = client.beta.assistants.create(
-        name="WhatsApp AirBnb Assistant",
-        instructions="You're a helpful WhatsApp assistant that can assist guests that are staying in our Paris AirBnb. Use your knowledge base to best respond to customer queries. If you don't know the answer, say simply that you cannot help with question and advice to contact the host directly. Be friendly and funny.",
-        tools=[{"type": "retrieval"}],
-        model="gpt-4-1106-preview",
-        file_ids=[file.id],
-    )
-    return assistant
+def get_chat_history(wa_id):
+    with shelve.open("threads_db") as db:
+        history = db.get(wa_id, [])
+        # Only keep the last 10 messages to avoid context window limits
+        return history[-10:]
 
-
-# Use context manager to ensure the shelf file is closed properly
-def check_if_thread_exists(wa_id):
-    with shelve.open("threads_db") as threads_shelf:
-        return threads_shelf.get(wa_id, None)
-
-
-def store_thread(wa_id, thread_id):
-    with shelve.open("threads_db", writeback=True) as threads_shelf:
-        threads_shelf[wa_id] = thread_id
-
-
-def run_assistant(thread, name):
-    # Retrieve the Assistant
-    assistant = client.beta.assistants.retrieve(OPENAI_ASSISTANT_ID)
-
-    # Run the assistant
-    run = client.beta.threads.runs.create(
-        thread_id=thread.id,
-        assistant_id=assistant.id,
-        # instructions=f"You are having a conversation with {name}",
-    )
-
-    # Wait for completion
-    # https://platform.openai.com/docs/assistants/how-it-works/runs-and-run-steps#:~:text=under%20failed_at.-,Polling%20for%20updates,-In%20order%20to
-    while run.status != "completed":
-        # Be nice to the API
-        time.sleep(0.5)
-        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
-
-    # Retrieve the Messages
-    messages = client.beta.threads.messages.list(thread_id=thread.id)
-    new_message = messages.data[0].content[0].text.value
-    logging.info(f"Generated message: {new_message}")
-    return new_message
-
+def save_chat_history(wa_id, history):
+    with shelve.open("threads_db", writeback=True) as db:
+        db[wa_id] = history
 
 def generate_response(message_body, wa_id, name):
-    # Check if there is already a thread_id for the wa_id
-    thread_id = check_if_thread_exists(wa_id)
+    logging.info(f"Generating Groq response for {name} ({wa_id})")
+    
+    # 1. Get previous conversation history
+    history = get_chat_history(wa_id)
+    
+    # 2. Add the new user message
+    history.append({"role": "user", "content": message_body})
+    
+    # 2.5 Intercept greetings directly to guarantee the correct format
+    greetings = ["hi", "hello", "hey", "good morning", "good evening", "good afternoon"]
+    if message_body.strip().lower() in greetings:
+        greeting_response = "Hi! How can I help you with our Ponniyin Selvan comic book?\n\nA single book costs ₹750, and the full 5-volume set is available for ₹2999."
+        history.append({"role": "assistant", "content": greeting_response})
+        save_chat_history(wa_id, history)
+        return greeting_response
 
-    # If a thread doesn't exist, create one and store it
-    if thread_id is None:
-        logging.info(f"Creating new thread for {name} with wa_id {wa_id}")
-        thread = client.beta.threads.create()
-        store_thread(wa_id, thread.id)
-        thread_id = thread.id
-
-    # Otherwise, retrieve the existing thread
-    else:
-        logging.info(f"Retrieving existing thread for {name} with wa_id {wa_id}")
-        thread = client.beta.threads.retrieve(thread_id)
-
-    # Add message to thread
-    message = client.beta.threads.messages.create(
-        thread_id=thread_id,
-        role="user",
-        content=message_body,
-    )
-
-    # Run the assistant and get the new message
-    new_message = run_assistant(thread, name)
-
-    return new_message
+    # 3. Construct the messages array with the System Prompt first
+    messages = [{"role": "system", "content": get_system_prompt()}] + history
+    
+    try:
+        # 4. Call Groq API (using Llama 3.1 8B which is lightning fast)
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant", 
+            messages=messages,
+            temperature=0.2,
+            max_tokens=500
+        )
+        
+        # 5. Extract response text
+        ai_message = response.choices[0].message.content
+        
+        # 6. Save back to history so it remembers next time
+        history.append({"role": "assistant", "content": ai_message})
+        save_chat_history(wa_id, history)
+        
+        logging.info(f"Generated message: {ai_message}")
+        return ai_message
+        
+    except Exception as e:
+        logging.error(f"Groq API Error: {e}")
+        # robust fallback mechanism
+        return get_fallback_message()

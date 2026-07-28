@@ -26,8 +26,9 @@ def handle_message():
     Returns:
         response: A tuple containing a JSON response and an HTTP status code.
     """
+    logging.info("Webhook received a POST request")
     body = request.get_json()
-    # logging.info(f"request body: {body}")
+    logging.info(f"Parsed webhook payload: {json.dumps(body)}")
 
     # Check if it's a WhatsApp status update
     if (
@@ -45,6 +46,7 @@ def handle_message():
             return jsonify({"status": "ok"}), 200
         else:
             # if the request is not a WhatsApp API event, return an error
+            logging.warning("Payload did not match a valid WhatsApp message structure")
             return (
                 jsonify({"status": "error", "message": "Not a WhatsApp API event"}),
                 404,
@@ -52,6 +54,9 @@ def handle_message():
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON")
         return jsonify({"status": "error", "message": "Invalid JSON provided"}), 400
+    except Exception:
+        logging.exception("Unhandled exception while processing webhook message")
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
 
 
 # Required webhook verifictaion for WhatsApp
