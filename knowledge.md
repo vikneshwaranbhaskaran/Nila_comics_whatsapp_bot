@@ -49,5 +49,5 @@ Nila Comics presents a comic book adaptation of the classic Tamil novel "Ponniyi
 
 **7. Important Links:**
 - Website: https://nilacomics.com/
-- FAQs: https://nilacomics.com/faqs/
-- Contact Us: https://nilacomics.com/contact-us/
+- FAQs: https://nilacomics.com/
+- Contact Us: https://nilacomics.com/

@@ -48,7 +48,7 @@ SCREENS = {
         "type": "button"
     },
     "sample_preview": {
-        "text": "Here is your sample link: https://nilacomics.com/sample\n\nHope you enjoyed the preview. Ready to continue your reading journey?",
+        "text": "Here is your sample link: https://nilacomics.com/\n\nHope you enjoyed the preview. Ready to continue your reading journey?",
         "options": ["Buy Single Volume", "Buy Complete Collection", "Home"],
         "type": "button"
     },
@@ -63,7 +63,7 @@ SCREENS = {
         "type": "button"
     },
     "buy": {
-        "text": "Great! You can purchase from our website:\n\nSingle Volume (₹750): https://nilacomics.com/single\nComplete Collection (₹2,999): https://nilacomics.com/collection",
+        "text": "Great! You can purchase from our website:\n\nSingle Volume (₹750): https://nilacomics.com/\nComplete Collection (₹2,999): https://nilacomics.com/",
         "options": ["Home"],
         "type": "button"
     },
