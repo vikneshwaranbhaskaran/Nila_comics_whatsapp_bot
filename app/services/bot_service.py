@@ -48,7 +48,7 @@ SCREENS = {
         "type": "button"
     },
     "sample_preview": {
-        "text": "Here is your sample link: https://nilacomics.com/\n\nHope you enjoyed the preview. Ready to continue your reading journey?",
+        "text": "Hope you enjoyed the preview images! Ready to continue your reading journey?",
         "options": ["Buy Single Volume", "Buy Complete Collection", "Home"],
         "type": "button"
     },
@@ -164,6 +164,23 @@ def process_incoming_message(body):
         update_state(wa_id, "sample")
         next_screen = "sample"
     elif cmd in ["tamil sample", "english sample"]:
+        from flask import request
+        import os
+        base_url = request.url_root
+        
+        # Ensure https for media links if behind a proxy
+        if base_url.startswith("http://") and "localhost" not in base_url and "127.0.0.1" not in base_url:
+            base_url = base_url.replace("http://", "https://")
+            
+        from app.utils.whatsapp_utils import get_image_message_input
+        
+        samples_dir = os.path.join("app", "static", "samples")
+        if os.path.exists(samples_dir):
+            for img in sorted(os.listdir(samples_dir)):
+                if img.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    img_url = f"{base_url}static/samples/{img}"
+                    send_message(get_image_message_input(wa_id, img_url))
+                    
         next_screen = "sample_preview"
     elif cmd in ["delivery", "delivery charges"]:
         update_state(wa_id, "delivery")

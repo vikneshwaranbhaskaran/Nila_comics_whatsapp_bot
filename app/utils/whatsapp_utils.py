@@ -24,6 +24,19 @@ def get_text_message_input(recipient, text):
         }
     )
 
+def get_image_message_input(recipient, link):
+    return json.dumps(
+        {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": recipient,
+            "type": "image",
+            "image": {
+                "link": link
+            }
+        }
+    )
+
 def get_interactive_button_message(recipient, text, buttons):
     """
     Constructs an interactive button message (max 3 buttons allowed).
