@@ -80,13 +80,24 @@ def get_state(wa_id):
     with shelve.open("threads_db") as db:
         if wa_id not in db:
             db[wa_id] = {"history": [], "viewed": [], "smart_conversion_triggered": False}
-        return db[wa_id].get("viewed", []), db[wa_id].get("smart_conversion_triggered", False)
+        
+        user_data = db[wa_id]
+        if isinstance(user_data, list):
+            # Backward compatibility: old format was just a list of history
+            user_data = {"history": user_data, "viewed": [], "smart_conversion_triggered": False}
+            # We don't save it here without writeback, but we can return the defaults
+        
+        return user_data.get("viewed", []), user_data.get("smart_conversion_triggered", False)
 
 def update_state(wa_id, viewed_section):
     with shelve.open("threads_db", writeback=True) as db:
         if wa_id not in db:
             db[wa_id] = {"history": [], "viewed": [], "smart_conversion_triggered": False}
         
+        if isinstance(db[wa_id], list):
+            # Upgrade old format to new format
+            db[wa_id] = {"history": db[wa_id], "viewed": [], "smart_conversion_triggered": False}
+            
         viewed_list = db[wa_id].get("viewed", [])
         if viewed_section not in viewed_list:
             viewed_list.append(viewed_section)
@@ -95,6 +106,8 @@ def update_state(wa_id, viewed_section):
 def mark_smart_conversion_triggered(wa_id):
     with shelve.open("threads_db", writeback=True) as db:
         if wa_id in db:
+            if isinstance(db[wa_id], list):
+                db[wa_id] = {"history": db[wa_id], "viewed": [], "smart_conversion_triggered": False}
             db[wa_id]["smart_conversion_triggered"] = True
 
 def send_screen(wa_id, screen_id):
