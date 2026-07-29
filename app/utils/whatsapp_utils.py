@@ -24,8 +24,72 @@ def get_text_message_input(recipient, text):
         }
     )
 
+def get_interactive_button_message(recipient, text, buttons):
+    """
+    Constructs an interactive button message (max 3 buttons allowed).
+    """
+    button_list = []
+    for i, btn_text in enumerate(buttons):
+        button_list.append({
+            "type": "reply",
+            "reply": {
+                "id": f"btn_{i}",
+                "title": btn_text
+            }
+        })
+        
+    return json.dumps(
+        {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": recipient,
+            "type": "interactive",
+            "interactive": {
+                "type": "button",
+                "body": {
+                    "text": text
+                },
+                "action": {
+                    "buttons": button_list
+                }
+            }
+        }
+    )
 
-
+def get_interactive_list_message(recipient, text, button_text, options):
+    """
+    Constructs an interactive list message (max 10 options).
+    """
+    rows = []
+    for i, opt_text in enumerate(options):
+        rows.append({
+            "id": f"list_opt_{i}",
+            "title": opt_text
+        })
+        
+    return json.dumps(
+        {
+            "messaging_product": "whatsapp",
+            "recipient_type": "individual",
+            "to": recipient,
+            "type": "interactive",
+            "interactive": {
+                "type": "list",
+                "body": {
+                    "text": text
+                },
+                "action": {
+                    "button": button_text,
+                    "sections": [
+                        {
+                            "title": "Options",
+                            "rows": rows
+                        }
+                    ]
+                }
+            }
+        }
+    )
 
 
 def send_message(data):
@@ -81,21 +145,8 @@ def process_text_for_whatsapp(text):
 
 
 def process_whatsapp_message(body):
-    wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
-    name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
-
-    message = body["entry"][0]["changes"][0]["value"]["messages"][0]
-    message_body = message["text"]["body"]
-
-    logging.info(f"Incoming message from wa_id={wa_id} name={name}: {message_body}")
-
-    # OpenAI Integration
-    response = generate_response(message_body, wa_id, name)
-    response = process_text_for_whatsapp(response)
-
-    data = get_text_message_input(wa_id, response)
-    send_message(data)
-
+    from app.services.bot_service import process_incoming_message
+    process_incoming_message(body)
 
 def is_valid_whatsapp_message(body):
     """

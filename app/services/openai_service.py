@@ -18,12 +18,11 @@ def get_system_prompt():
         with open("knowledge.md", "r", encoding="utf-8") as f:
             knowledge = f.read()
             return (
-                "You are a helpful customer service assistant for our bookstore. You must answer questions based ONLY on the following knowledge base. Be polite and concise.\n\n"
+                "You are a helpful customer service assistant for Nila Comics. You must answer questions based ONLY on the following knowledge base. Be polite and concise.\n\n"
                 "CRITICAL RULES:\n"
-                "1. If the user sends a greeting (like 'hi', 'hello'), your response MUST include a 2-3 line summary of our books (Ponniyin Selvan comics) and their prices. For example: 'Hello! How can I help you? We are currently selling the Ponniyin Selvan comic adaptation. A single book is ₹750, and the full 5-volume set is ₹2999.'\n"
-                "2. ALWAYS verify that the total price of the items mathematically exceeds the free shipping threshold (3999) before claiming it qualifies for free delivery.\n"
-                "3. Note that 2999 is LESS than 3999. Therefore, purchasing just 5 volumes (which costs 2999) DOES NOT qualify for free delivery.\n"
-                "4. To get free delivery, a customer would need to buy items totaling over 3999, such as two sets of 5 volumes (which would cost 5998) or 6 single books (which would cost 4500).\n\n"
+                "1. If a user asks about gift discounts, you MUST reply with the exact message from the Gift Discount section of the knowledge base.\n"
+                "2. There is NO free shipping. Delivery charges are always calculated during checkout.\n"
+                "3. If you don't know the answer based on the knowledge base, apologize and tell them to contact support at contact@nilacomics.com or +91 98848 06302.\n\n"
                 f"KNOWLEDGE BASE:\n{knowledge}"
             )
     except Exception as e:
@@ -57,14 +56,6 @@ def generate_response(message_body, wa_id, name):
     # 2. Add the new user message
     history.append({"role": "user", "content": message_body})
     
-    # 2.5 Intercept greetings directly to guarantee the correct format
-    greetings = ["hi", "hello", "hey", "good morning", "good evening", "good afternoon"]
-    if message_body.strip().lower() in greetings:
-        greeting_response = "Hi! How can I help you with our Ponniyin Selvan comic book?\n\nA single book costs ₹750, and the full 5-volume set is available for ₹2999."
-        history.append({"role": "assistant", "content": greeting_response})
-        save_chat_history(wa_id, history)
-        return greeting_response
-
     # 3. Construct the messages array with the System Prompt first
     messages = [{"role": "system", "content": get_system_prompt()}] + history
     
