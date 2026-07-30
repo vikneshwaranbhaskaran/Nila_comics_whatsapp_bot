@@ -14,33 +14,33 @@ from app.utils.whatsapp_utils import (
 SCREENS = {
     "welcome": {
         "text": "👋 Vanakkam! Welcome to Nila Comics\n\nExperience Kalki's legendary Ponniyin Selvan through beautifully illustrated full-colour comics.\n\n📚 Available in Tamil and English\n\nNeed help choosing? I'm here to guide you.\n\nHow can I help you today?",
-        "options": ["Explore Collection", "Price", "Read Sample", "Delivery", "Buy Now", "Ask a Question"],
+        "options": ["Explore Collection", "Price", "Read Sample", "Delivery", "Buy Now", "Ask a Question", "Support"],
         "type": "list"
     },
     "explore": {
         "text": "Choose your preferred language.",
-        "options": ["Tamil Edition", "English Edition", "Home"],
-        "type": "button"
+        "options": ["Tamil Edition", "English Edition", "Home", "Support"],
+        "type": "list"
     },
     "edition": {
         "text": "✔ Beautiful Full Colour Artwork\n✔ Around 350 pages per volume\n✔ Available as individual books or complete collection",
-        "options": ["Read Sample", "Price", "Buy Now", "Home"],
+        "options": ["Read Sample", "Price", "Buy Now", "Home", "Support"],
         "type": "list"
     },
     "price": {
         "text": "💰 Ponniyin Selvan Pricing\n\n📖 Single Volume\n₹750 per book\n\n📚 Complete Collection (5 Volumes)\n₹2,999 only\n\n🎉 Save ₹751 when you purchase the complete collection.\n\nThe complete collection is the best value and lets you enjoy the full story without interruption.",
-        "options": ["Buy Single Volume", "Buy All 5 Volumes", "Delivery Charges", "Current Offers", "Home"],
+        "options": ["Buy Single Volume", "Buy All 5 Volumes", "Delivery Charges", "Current Offers", "Home", "Support"],
         "type": "list"
     },
     "discount": {
         "text": "🎁 Discount Information\n\n✔ Single Book Price: ₹750 each\n✔ Buy any individual volume at ₹750.\n✔ Buy all 5 volumes together for only ₹2,999.\n✔ You save ₹751 compared to purchasing all five books separately.\n\nThe discount is automatically applied when purchasing the complete collection.",
-        "options": ["Buy All 5 Volumes", "Price", "Home"],
-        "type": "button"
+        "options": ["Buy All 5 Volumes", "Price", "Home", "Support"],
+        "type": "list"
     },
     "delivery": {
         "text": "🚚 Delivery Information\n\nDelivery available across India.\n✔ Estimated delivery time: 3–7 business days within India.\n✔ International shipping is available.\n✔ Delivery charges are applicable for all orders.\n✔ We do not offer free shipping.\n✔ Delivery charges are calculated based on your delivery location and order quantity.\n✔ The exact delivery charge will be displayed during checkout before payment.\n✔ There are no hidden charges after checkout.\n✔ Tracking details will be shared once your order is dispatched.",
-        "options": ["Ship Abroad", "Buy Now", "Home"],
-        "type": "button"
+        "options": ["Ship Abroad", "Buy Now", "Home", "Support"],
+        "type": "list"
     },
     "sample": {
         "text": "Choose:",
@@ -49,17 +49,17 @@ SCREENS = {
     },
     "sample_preview": {
         "text": "Hope you enjoyed the preview images! Ready to continue your reading journey?",
-        "options": ["Buy Single Volume", "Buy All 5 Volumes", "Home"],
-        "type": "button"
+        "options": ["Buy Single Volume", "Buy All 5 Volumes", "Home", "Support"],
+        "type": "list"
     },
     "sample_more": {
         "text": "Would you like to see more sample images or go back to home?",
-        "options": ["More Images", "Go back to Home"],
+        "options": ["More Images", "Go back to Home", "Support"],
         "type": "button"
     },
     "product_details": {
         "text": "✔ Premium Maplitho Paper\n✔ Offset Printing\n✔ Full Colour\n✔ Approx. 350 Pages per Volume\n✔ Approx. 1,750 Pages Total\n✔ Tamil & English Editions",
-        "options": ["Price", "Home"],
+        "options": ["Price", "Home", "Support"],
         "type": "button"
     },
     "support": {
@@ -69,7 +69,7 @@ SCREENS = {
     },
     "buy": {
         "text": "Great! You can purchase from our website:\n\nSingle Volume (₹750): https://nilacomics.com/\nComplete Collection (₹2,999): https://nilacomics.com/",
-        "options": ["Home"],
+        "options": ["Home", "Support"],
         "type": "button"
     },
     "smart_conversion": {
@@ -78,13 +78,13 @@ SCREENS = {
         "type": "button"
     },
     "faq": {
-        "text": "❓ Frequently Asked Questions\n\n*Is it available in English?*\nYes, available in English.\n\n*Is it available in Tamil?*\nYes, available in Tamil.\n\n*Can I buy a single book?*\nYes. Every volume can be purchased individually for ₹750.\n\n*Can I buy only two books?*\nYes. You may purchase any individual volumes you want.\n\n*What is the discount?*\nBuy all 5 volumes for ₹2,999 and save ₹751.\n\n*What are the delivery charges?*\nCalculated during checkout based on your location.\n\n*Are there any hidden charges?*\nNo. Your final payable amount is shown before payment.\n\n*Is this suitable for children?*\nYes, the comic format is engaging for young readers.\n\n*Which volume should I start with?*\nWe recommend starting with Volume 1.",
+        "text": "❓ FAQs\n\n*Is it available in English?*\nYes, available in English.\n\n*Is it available in Tamil?*\nYes, available in Tamil.\n\n*Can I buy a single book?*\nYes. Every volume can be purchased individually for ₹750.\n\n*Can I buy only two books?*\nYes. You may purchase any individual volumes you want.\n\n*What is the discount?*\nBuy all 5 volumes for ₹2,999 and save ₹751.\n\n*What are the delivery charges?*\nCalculated during checkout based on your location.\n\n*Hidden charges?*\nNo. Your final payable amount is shown before payment.\n\n*Suitable for children?*\nYes, the comic format is engaging for young readers.\n\n*Which volume to start with?*\nWe recommend starting with Volume 1.\n\n*Is there a gift discount?*\n🎁 The Ponniyin Selvan Comic Collection makes a wonderful gift for family, friends, and history lovers.\nOur Complete 5-Volume Collection is already offered at a special discounted price of ₹2,999, which includes a ₹750 discount from the original price.\nThere is no separate or additional discount for gift purchases.",
         "options": ["Contact Support", "Home"],
         "type": "button"
     },
     "unknown_first": {
         "text": "😊 Sorry, I couldn't quite understand that. I'm the Nila Comics assistant, and I'm happy to help you with:\n\n📚 Explore the Ponniyin Selvan Collection\n📖 Sample Pages\n💰 Pricing & Discounts\n🚚 Delivery Information\n❓ Frequently Asked Questions\n🛒 Buy the Collection\n\nPlease choose one of the options below.",
-        "options": ["Explore Collection", "Read Sample", "Price", "Delivery", "FAQs", "Buy Now", "Home"],
+        "options": ["Explore Collection", "Read Sample", "Price", "Delivery", "FAQs", "Buy Now", "Home", "Support"],
         "type": "list"
     },
     "unknown_repeated": {
@@ -283,7 +283,7 @@ def process_incoming_message(body):
         next_screen = "support"
     elif cmd in ["faqs", "faq"]:
         next_screen = "faq"
-    elif cmd == "contact support":
+    elif cmd in ["contact support", "support"]:
         next_screen = "support"
     elif cmd == "ask a question":
         # Send a prompt to ask the question

@@ -36,7 +36,10 @@ Nila Comics presents a comic book adaptation of the classic Tamil novel "Ponniyi
 - **Are there any hidden charges?** No. Your final payable amount is shown before payment.
 - **Is this suitable for children?** Yes, the comic format is engaging for young readers while preserving the historical story.
 - **Which volume should I start with?** We recommend starting with Volume 1.
-- **Is there a gift discount?** 🎁 Our Complete 5-Volume Collection is already available at a special discounted price of ₹2,999, which includes a ₹750 discount from the original price. There is no separate discount for gift purchases. You can have the order delivered directly to your recipient by entering their delivery address during checkout.
+- **Is there a gift discount?**
+🎁 The Ponniyin Selvan Comic Collection makes a wonderful gift for family, friends, and history lovers.
+Our Complete 5-Volume Collection is already offered at a special discounted price of ₹2,999, which includes a ₹750 discount from the original price.
+There is no separate or additional discount for gift purchases.
 
 **5. Contact Information & Support:**
 - WhatsApp: +91 98848 06302
@@ -67,19 +70,19 @@ Need help choosing? I'm here to guide you.
 
 How can I help you today?
 
-Buttons: Explore Collection, Price, Read Sample, Delivery, Buy Now, Ask a Question
+Buttons: Explore Collection, Price, Read Sample, Delivery, Buy Now, Ask a Question, Support
 
 **Explore Collection:**
 Choose your preferred language.
 
-Buttons: Tamil Edition, English Edition, Home
+Buttons: Tamil Edition, English Edition, Home, Support
 
 **Tamil Edition / English Edition (shared template):**
 ✔ Beautiful Full Colour Artwork
 ✔ Around 350 pages per volume
 ✔ Available as individual books or complete collection
 
-Buttons: Read Sample, Price, Buy Now, Home
+Buttons: Read Sample, Price, Buy Now, Home, Support
 
 **Sample Pages:**
 User picks Tamil Sample or English Sample; the bot sends 4 sample images at a time, then asks
@@ -88,7 +91,7 @@ if they want more images or want to return home.
 **After reading Sample Pages (Follow-up message):**
 Hope you enjoyed the preview images! Ready to continue your reading journey?
 
-Buttons: Buy Single Volume, Buy All 5 Volumes, Home
+Buttons: Buy Single Volume, Buy All 5 Volumes, Home, Support
 
 **Price:**
 💰 Ponniyin Selvan Pricing
@@ -101,7 +104,7 @@ Buttons: Buy Single Volume, Buy All 5 Volumes, Home
 
 🎉 Save ₹751 when you purchase the complete collection.
 
-Buttons: Buy Single Volume, Buy All 5 Volumes, Delivery Charges, Current Offers, Home
+Buttons: Buy Single Volume, Buy All 5 Volumes, Delivery Charges, Current Offers, Home, Support
 
 **Discount:**
 🎁 Discount Information
@@ -110,7 +113,7 @@ Buttons: Buy Single Volume, Buy All 5 Volumes, Delivery Charges, Current Offers,
 ✔ Buy all 5 volumes together for only ₹2,999.
 ✔ You save ₹751 compared to purchasing all five books separately.
 
-Buttons: Buy All 5 Volumes, Price, Home
+Buttons: Buy All 5 Volumes, Price, Home, Support
 
 **Delivery:**
 🚚 Delivery Information
@@ -118,7 +121,7 @@ Buttons: Buy All 5 Volumes, Price, Home
 Delivery available across India, 3–7 business days domestically, international shipping
 available, no free shipping, charges shown at checkout, no hidden charges after checkout.
 
-Buttons: Ship Abroad, Buy Now, Home
+Buttons: Ship Abroad, Buy Now, Home, Support
 
 **Product Details:**
 ✔ Premium Maplitho Paper
@@ -128,11 +131,12 @@ Buttons: Ship Abroad, Buy Now, Home
 ✔ Approx. 1,750 Pages Total
 ✔ Tamil & English Editions
 
-Buttons: Price, Home
+Buttons: Price, Home, Support
 
 **FAQs:**
 Reachable by tapping the "FAQs" button (shown on the unknown-message fallback screen) or by
-typing "faq"/"faqs" directly. Renders the full FAQ list from section 4 above as one message.
+typing "faq"/"faqs" directly. Renders the full FAQ list from section 4 above (including the
+Gift Discount answer) as one message.
 
 Buttons: Contact Support, Home
 
@@ -148,7 +152,7 @@ Buttons: Home
 Great! You can purchase from our website:
 Single Volume (₹750) / Complete Collection (₹2,999): https://nilacomics.com/
 
-Buttons: Home
+Buttons: Home, Support
 
 **Smart Conversion:**
 Fires once, the first time a user has viewed any 2 of {Price, Discount, Delivery, Sample
@@ -170,7 +174,7 @@ Buttons: Buy Single Volume, Buy All 5 Volumes, Continue Browsing
 
 Please choose one of the options below.
 
-Buttons: Explore Collection, Read Sample, Price, Delivery, FAQs, Buy Now, Home
+Buttons: Explore Collection, Read Sample, Price, Delivery, FAQs, Buy Now, Home, Support
 
 **Unknown/random input (3rd+ consecutive miss):**
 😊 I'm sorry, I still couldn't understand your request.
