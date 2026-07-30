@@ -51,83 +51,118 @@ Nila Comics presents a comic book adaptation of the classic Tamil novel "Ponniyi
 
 **7. Conversational Flows & Bot Responses:**
 
-**Front page content:**
-👋 Vanakkam! Welcome to Nila Comics.
+This section is the single source of truth for every screen the bot can show, and must be
+kept in sync with the `SCREENS` dict in `app/services/bot_service.py`. Do not duplicate a
+screen here with different wording/buttons than the code — the two have drifted apart before
+and it made the AI describe menus incorrectly.
 
-Step into Kalki's legendary world of Ponniyin Selvan through beautifully illustrated, full-colour comic books that bring the epic Chola saga to life.
+**Welcome (Home):**
+👋 Vanakkam! Welcome to Nila Comics
+
+Experience Kalki's legendary Ponniyin Selvan through beautifully illustrated full-colour comics.
 
 📚 Available in Tamil and English
 
-I'm here to help you explore the collection, view sample pages, check pricing, and place your order.
+Need help choosing? I'm here to guide you.
 
 How can I help you today?
 
-**If the user clicks Explore Collection:**
-📚 Welcome to the Ponniyin Selvan Comic Collection!
+Buttons: Explore Collection, Price, Read Sample, Delivery, Buy Now, Ask a Question
 
-Discover the legendary Chola Empire through beautifully illustrated comics, available in Tamil and English.
+**Explore Collection:**
+Choose your preferred language.
 
-Choose what you'd like to explore:
+Buttons: Tamil Edition, English Edition, Home
 
-Buttons:
-- 🇹🇦 Tamil Collection
-- 🇬🇧 English Collection
-- 📖 View Sample Pages
-- 💰 Pricing & Offers
-- 📚 Complete 5-Volume Collection
-- 🛒 Buy Now
-- 🏠 Home
+**Tamil Edition / English Edition (shared template):**
+✔ Beautiful Full Colour Artwork
+✔ Around 350 pages per volume
+✔ Available as individual books or complete collection
 
-**If the user clicks Tamil Collection:**
-🇹🇦 Tamil Collection
+Buttons: Read Sample, Price, Buy Now, Home
 
-Experience Ponniyin Selvan in Tamil with vibrant illustrations and high-quality printing.
-
-Available as:
-- Individual Volumes (₹750 each)
-- Complete 5-Volume Collection (₹2,999)
-
-Buttons:
-- 📖 Sample Pages
-- 💰 Price
-- 🛒 Buy Now
-- 🏠 Home
-
-**If the user clicks English Collection:**
-🇬🇧 English Collection
-
-Enjoy Ponniyin Selvan in English with vibrant illustrations and high-quality printing.
-
-Available as:
-- Individual Volumes (₹750 each)
-- Complete 5-Volume Collection (₹2,999)
-
-Buttons:
-- 📖 Sample Pages
-- 💰 Price
-- 🛒 Buy Now
-- 🏠 Home
-
-**If the user picks Sample Pages:**
-Send 4 sample images and ask them if they want more images or go to home.
+**Sample Pages:**
+User picks Tamil Sample or English Sample; the bot sends 4 sample images at a time, then asks
+if they want more images or want to return home.
 
 **After reading Sample Pages (Follow-up message):**
-Interested in reading the complete story? 😊
+Hope you enjoyed the preview images! Ready to continue your reading journey?
 
-Buttons:
-- 🛒 Buy Complete Collection
-- 📖 Buy Single Volume
-- 💰 Price
-- 🚚 Delivery Information
-- 🏠 Home
+Buttons: Buy Single Volume, Buy All 5 Volumes, Home
 
-**Unknown Message / Random Input (1st/2nd time):**
-😊 Sorry, I couldn't understand your request.
+**Price:**
+💰 Ponniyin Selvan Pricing
 
-I can help you with:
+📖 Single Volume
+₹750 per book
+
+📚 Complete Collection (5 Volumes)
+₹2,999 only
+
+🎉 Save ₹751 when you purchase the complete collection.
+
+Buttons: Buy Single Volume, Buy All 5 Volumes, Delivery Charges, Current Offers, Home
+
+**Discount:**
+🎁 Discount Information
+
+✔ Single Book Price: ₹750 each
+✔ Buy all 5 volumes together for only ₹2,999.
+✔ You save ₹751 compared to purchasing all five books separately.
+
+Buttons: Buy All 5 Volumes, Price, Home
+
+**Delivery:**
+🚚 Delivery Information
+
+Delivery available across India, 3–7 business days domestically, international shipping
+available, no free shipping, charges shown at checkout, no hidden charges after checkout.
+
+Buttons: Ship Abroad, Buy Now, Home
+
+**Product Details:**
+✔ Premium Maplitho Paper
+✔ Offset Printing
+✔ Full Colour
+✔ Approx. 350 Pages per Volume
+✔ Approx. 1,750 Pages Total
+✔ Tamil & English Editions
+
+Buttons: Price, Home
+
+**FAQs:**
+Reachable by tapping the "FAQs" button (shown on the unknown-message fallback screen) or by
+typing "faq"/"faqs" directly. Renders the full FAQ list from section 4 above as one message.
+
+Buttons: Contact Support, Home
+
+**Support:**
+Contact our support team:
+WhatsApp: +91 98848 06302
+Email: contact@nilacomics.com
+Call: +91 98848 06302
+
+Buttons: Home
+
+**Buy:**
+Great! You can purchase from our website:
+Single Volume (₹750) / Complete Collection (₹2,999): https://nilacomics.com/
+
+Buttons: Home
+
+**Smart Conversion:**
+Fires once, the first time a user has viewed any 2 of {Price, Discount, Delivery, Sample
+Pages, Product Details}, right after whatever screen they just requested:
+
+It looks like you've explored the Ponniyin Selvan collection. Ready to own this timeless masterpiece?
+
+Buttons: Buy Single Volume, Buy All 5 Volumes, Continue Browsing
+
+**Unknown/random input (1st or 2nd consecutive miss):**
+😊 Sorry, I couldn't quite understand that. I'm the Nila Comics assistant, and I'm happy to help you with:
 
 📚 Explore the Ponniyin Selvan Collection
-📖 View Sample Pages
+📖 Sample Pages
 💰 Pricing & Discounts
 🚚 Delivery Information
 ❓ Frequently Asked Questions
@@ -135,20 +170,20 @@ I can help you with:
 
 Please choose one of the options below.
 
-Buttons:
-- 📚 Explore Collection
-- 📖 Sample Pages
-- 💰 Price
-- 🚚 Delivery
-- ❓ FAQs
-- 🛒 Buy Now
-- 🏠 Home
+Buttons: Explore Collection, Read Sample, Price, Delivery, FAQs, Buy Now, Home
 
-**If the user enters random text repeatedly (2–3 times):**
-😊 I'm sorry, I couldn't understand your request.
+**Unknown/random input (3rd+ consecutive miss):**
+😊 I'm sorry, I still couldn't understand your request.
 
 Please select one of the options below, or contact our support team if you need further assistance.
 
-Buttons:
-- 📞 Contact Support
-- 🏠 Home
+Buttons: Contact Support, Home
+
+**How "unknown" is decided:** free text that doesn't match a button is sent to the AI, which
+first judges whether the message is actually about Nila Comics / Ponniyin Selvan / pricing /
+delivery / orders. If it is, the AI answers normally from this knowledge base. If it is not
+(small talk, unrelated trivia, gibberish), the bot does NOT let the AI free-associate a reply —
+it shows the sweet on-brand redirect screen above instead, and a per-user streak counter
+decides whether to show the 1st/2nd version or escalate to the 3rd+ "contact support" version.
+The streak resets to zero the moment the user taps any real menu button or asks something the
+AI can answer on-topic.
