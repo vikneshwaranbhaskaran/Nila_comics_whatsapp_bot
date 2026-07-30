@@ -52,6 +52,11 @@ SCREENS = {
         "options": ["Buy Single Volume", "Buy Complete Collection", "Home"],
         "type": "button"
     },
+    "sample_more": {
+        "text": "Would you like to see more sample images?",
+        "options": ["More Images", "Home"],
+        "type": "button"
+    },
     "product_details": {
         "text": "✔ Premium Maplitho Paper\n✔ Offset Printing\n✔ Full Colour\n✔ Approx. 350 Pages per Volume\n✔ Approx. 1,750 Pages Total\n✔ Tamil & English Editions",
         "options": ["Price", "Home"],
@@ -110,6 +115,20 @@ def mark_smart_conversion_triggered(wa_id):
                 db[wa_id] = {"history": db[wa_id], "viewed": [], "smart_conversion_triggered": False}
             db[wa_id]["smart_conversion_triggered"] = True
 
+def get_sample_state(wa_id):
+    with shelve.open("threads_db") as db:
+        user_data = db.get(wa_id, {})
+        if isinstance(user_data, list):
+            return "tamil", 0
+        return user_data.get("sample_language", "tamil"), user_data.get("sample_page", 0)
+
+def update_sample_state(wa_id, language, page):
+    with shelve.open("threads_db", writeback=True) as db:
+        if wa_id not in db or isinstance(db[wa_id], list):
+            db[wa_id] = {"history": [], "viewed": [], "smart_conversion_triggered": False}
+        db[wa_id]["sample_language"] = language
+        db[wa_id]["sample_page"] = page
+
 def send_screen(wa_id, screen_id):
     screen = SCREENS.get(screen_id)
     if not screen:
@@ -123,12 +142,30 @@ def send_screen(wa_id, screen_id):
     
     send_message(data)
 
+def check_and_mark_processed(msg_id):
+    if not msg_id:
+        return False
+    with shelve.open("threads_db", writeback=True) as db:
+        processed = db.get("processed_messages", [])
+        if msg_id in processed:
+            return True
+        processed.append(msg_id)
+        if len(processed) > 1000:
+            processed = processed[-1000:]
+        db["processed_messages"] = processed
+        return False
 
 def process_incoming_message(body):
     wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
     name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
 
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
+    msg_id = message.get("id")
+    
+    if check_and_mark_processed(msg_id):
+        logging.info(f"Message {msg_id} already processed. Ignoring duplicate.")
+        return
+
     msg_type = message.get("type", "text")
     
     message_text = ""
@@ -163,7 +200,7 @@ def process_incoming_message(body):
     elif cmd == "read sample":
         update_state(wa_id, "sample")
         next_screen = "sample"
-    elif cmd in ["tamil sample", "english sample"]:
+    elif cmd in ["tamil sample", "english sample", "more images"]:
         from flask import request
         import os
         base_url = request.url_root
@@ -174,14 +211,34 @@ def process_incoming_message(body):
             
         from app.utils.whatsapp_utils import get_image_message_input
         
-        samples_dir = os.path.join("app", "static", "samples")
+        if cmd == "more images":
+            lang, page = get_sample_state(wa_id)
+        else:
+            lang = "tamil" if cmd == "tamil sample" else "english"
+            page = 0
+            
+        samples_dir = os.path.join("app", "static", "samples", lang)
+        
+        has_more = False
         if os.path.exists(samples_dir):
-            for img in sorted(os.listdir(samples_dir)):
-                if img.lower().endswith(('.png', '.jpg', '.jpeg')):
-                    img_url = f"{base_url}static/samples/{img}"
-                    send_message(get_image_message_input(wa_id, img_url))
-                    
-        next_screen = "sample_preview"
+            images = [img for img in sorted(os.listdir(samples_dir)) if img.lower().endswith(('.png', '.jpg', '.jpeg'))]
+            start_idx = page * 4
+            end_idx = start_idx + 4
+            current_images = images[start_idx:end_idx]
+            
+            for img in current_images:
+                img_url = f"{base_url}static/samples/{lang}/{img}"
+                send_message(get_image_message_input(wa_id, img_url))
+                
+            has_more = len(images) > end_idx
+            
+        if has_more:
+            update_sample_state(wa_id, lang, page + 1)
+            next_screen = "sample_more"
+        else:
+            # reset page if they want to view samples again later
+            update_sample_state(wa_id, lang, 0)
+            next_screen = "sample_preview"
     elif cmd in ["delivery", "delivery charges"]:
         update_state(wa_id, "delivery")
         next_screen = "delivery"

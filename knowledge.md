@@ -26,7 +26,7 @@ Nila Comics presents a comic book adaptation of the classic Tamil novel "Ponniyi
 - There are no hidden charges after checkout.
 - Tracking details will be shared once your order is dispatched.
 
-**4. FAQs:**
+**4. FAQs (Mandatory):**
 - **Is it available in English?** Yes, available in English.
 - **Is it available in Tamil?** Yes, available in Tamil.
 - **Can I buy a single book?** Yes. Every volume can be purchased individually for ₹750.
@@ -36,18 +36,119 @@ Nila Comics presents a comic book adaptation of the classic Tamil novel "Ponniyi
 - **Are there any hidden charges?** No. Your final payable amount is shown before payment.
 - **Is this suitable for children?** Yes, the comic format is engaging for young readers while preserving the historical story.
 - **Which volume should I start with?** We recommend starting with Volume 1.
+- **Is there a gift discount?** 🎁 Our Complete 5-Volume Collection is already available at a special discounted price of ₹2,999, which includes a ₹750 discount from the original price. There is no separate discount for gift purchases. You can have the order delivered directly to your recipient by entering their delivery address during checkout.
 
-**5. Gift Discount:**
-- **Is there any gift discount? / Do you offer a discount for gifting? / Can I get a special price if I'm buying it as a gift?**
-🎁 The Ponniyin Selvan Comic Collection makes a wonderful gift for family, friends, and history lovers. Our Complete 5-Volume Collection is already offered at a special discounted price of ₹2,999, which includes a ₹750 discount from the original price. There is no separate or additional discount for gift purchases.
-
-**6. Contact Information & Support:**
+**5. Contact Information & Support:**
 - WhatsApp: +91 98848 06302
 - Email: contact@nilacomics.com
 - Call: +91 98848 06302
 - W-100, 4th floor, 2nd Avenue, Anna Nagar, Chennai -600 040
 
-**7. Important Links:**
+**6. Important Links:**
 - Website: https://nilacomics.com/
 - FAQs: https://nilacomics.com/
 - Contact Us: https://nilacomics.com/
+
+**7. Conversational Flows & Bot Responses:**
+
+**Front page content:**
+👋 Vanakkam! Welcome to Nila Comics.
+
+Step into Kalki's legendary world of Ponniyin Selvan through beautifully illustrated, full-colour comic books that bring the epic Chola saga to life.
+
+📚 Available in Tamil and English
+
+I'm here to help you explore the collection, view sample pages, check pricing, and place your order.
+
+How can I help you today?
+
+**If the user clicks Explore Collection:**
+📚 Welcome to the Ponniyin Selvan Comic Collection!
+
+Discover the legendary Chola Empire through beautifully illustrated comics, available in Tamil and English.
+
+Choose what you'd like to explore:
+
+Buttons:
+- 🇹🇦 Tamil Collection
+- 🇬🇧 English Collection
+- 📖 View Sample Pages
+- 💰 Pricing & Offers
+- 📚 Complete 5-Volume Collection
+- 🛒 Buy Now
+- 🏠 Home
+
+**If the user clicks Tamil Collection:**
+🇹🇦 Tamil Collection
+
+Experience Ponniyin Selvan in Tamil with vibrant illustrations and high-quality printing.
+
+Available as:
+- Individual Volumes (₹750 each)
+- Complete 5-Volume Collection (₹2,999)
+
+Buttons:
+- 📖 Sample Pages
+- 💰 Price
+- 🛒 Buy Now
+- 🏠 Home
+
+**If the user clicks English Collection:**
+🇬🇧 English Collection
+
+Enjoy Ponniyin Selvan in English with vibrant illustrations and high-quality printing.
+
+Available as:
+- Individual Volumes (₹750 each)
+- Complete 5-Volume Collection (₹2,999)
+
+Buttons:
+- 📖 Sample Pages
+- 💰 Price
+- 🛒 Buy Now
+- 🏠 Home
+
+**If the user picks Sample Pages:**
+Send 4 sample images and ask them if they want more images or go to home.
+
+**After reading Sample Pages (Follow-up message):**
+Interested in reading the complete story? 😊
+
+Buttons:
+- 🛒 Buy Complete Collection
+- 📖 Buy Single Volume
+- 💰 Price
+- 🚚 Delivery Information
+- 🏠 Home
+
+**Unknown Message / Random Input (1st/2nd time):**
+😊 Sorry, I couldn't understand your request.
+
+I can help you with:
+
+📚 Explore the Ponniyin Selvan Collection
+📖 View Sample Pages
+💰 Pricing & Discounts
+🚚 Delivery Information
+❓ Frequently Asked Questions
+🛒 Buy the Collection
+
+Please choose one of the options below.
+
+Buttons:
+- 📚 Explore Collection
+- 📖 Sample Pages
+- 💰 Price
+- 🚚 Delivery
+- ❓ FAQs
+- 🛒 Buy Now
+- 🏠 Home
+
+**If the user enters random text repeatedly (2–3 times):**
+😊 I'm sorry, I couldn't understand your request.
+
+Please select one of the options below, or contact our support team if you need further assistance.
+
+Buttons:
+- 📞 Contact Support
+- 🏠 Home
