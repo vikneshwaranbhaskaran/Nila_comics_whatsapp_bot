@@ -341,9 +341,12 @@ def process_incoming_message(body):
 
         if is_on_topic:
             set_unknown_count(wa_id, 0)
-            response = process_text_for_whatsapp(response)
-            data = get_text_message_input(wa_id, response)
-            send_message(data)
+            if response == "GREETING":
+                send_screen(wa_id, "welcome")
+            else:
+                response = process_text_for_whatsapp(response)
+                data = get_text_message_input(wa_id, response)
+                send_message(data)
         else:
             unknown_count = get_unknown_count(wa_id) + 1
             set_unknown_count(wa_id, unknown_count)

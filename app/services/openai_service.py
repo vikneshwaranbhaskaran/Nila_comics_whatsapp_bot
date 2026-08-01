@@ -14,6 +14,7 @@ client = OpenAI(
 )
 
 OFF_TOPIC_SENTINEL = "OFF_TOPIC"
+GREETING_SENTINEL = "GREETING"
 
 def get_system_prompt():
     try:
@@ -25,7 +26,7 @@ def get_system_prompt():
                 "1. If a user asks about gift discounts, you MUST reply with the exact message from the Gift Discount section of the knowledge base.\n"
                 "2. There is NO free shipping. Delivery charges are always calculated during checkout.\n"
                 "3. If you don't know the answer based on the knowledge base, apologize and tell them to contact support at contact@nilacomics.com or +91 98848 06302.\n"
-                "4. If the user sends a greeting (like hi, hey, hello, heyy, good morning), respond with a friendly welcome to Nila Comics and ask how you can help them explore the Ponniyin Selvan collection.\n"
+                f"4. If the user sends a greeting (like hi, hey, hello, heyy, good morning, what's up), reply with EXACTLY this single word and nothing else: {GREETING_SENTINEL}\n"
                 "5. Before answering other questions, decide whether the user's message is actually about Nila Comics, the Ponniyin "
                 "Selvan comic collection, its price, delivery, samples, or related orders/support. If the message is "
                 f"unrelated to these topics (general trivia, other products, or text you cannot make "
