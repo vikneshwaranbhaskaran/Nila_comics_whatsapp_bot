@@ -1,6 +1,7 @@
 import logging
 import json
 import shelve
+import time
 from app.services.openai_service import generate_response
 from app.utils.whatsapp_utils import (
     get_text_message_input,
@@ -258,10 +259,15 @@ def process_incoming_message(body):
             for img in current_images:
                 img_url = f"{base_url}static/samples/{lang}/{img}"
                 send_message(get_image_message_input(wa_id, img_url))
-                
-            import time
-            time.sleep(0.5)
-                
+                # WhatsApp fetches/processes each linked image server-side before
+                # delivering it, so back-to-back sends can still arrive out of order.
+                # Spacing them out reduces images arriving out of order among themselves.
+                time.sleep(0.4)
+
+            # Extra buffer so the last image has time to actually reach the device
+            # before the follow-up text/button prompt, which delivers almost instantly.
+            time.sleep(2.0)
+
             has_more = len(images) > end_idx
             
         if has_more and page == 0:
