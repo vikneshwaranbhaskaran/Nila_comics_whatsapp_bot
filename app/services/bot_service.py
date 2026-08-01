@@ -83,9 +83,9 @@ SCREENS = {
         "type": "button"
     },
     "unknown_first": {
-        "text": "😊 Sorry, I couldn't quite understand that. I'm the Nila Comics assistant, and I'm happy to help you with:\n\n📚 Explore the Ponniyin Selvan Collection\n📖 Sample Pages\n💰 Pricing & Discounts\n🚚 Delivery Information\n❓ Frequently Asked Questions\n🛒 Buy the Collection\n\nPlease choose one of the options below.",
-        "options": ["Explore Collection", "Read Sample", "Price", "Delivery", "FAQs", "Buy Now", "Home", "Support"],
-        "type": "list"
+        "text": "😊 Sorry, I couldn't quite understand that.\n\nPlease contact our support team if you need further assistance, or return to the main menu.",
+        "options": ["Contact Support", "Home"],
+        "type": "button"
     },
     "unknown_repeated": {
         "text": "😊 I'm sorry, I still couldn't understand your request.\n\nPlease select one of the options below, or contact our support team if you need further assistance.",
@@ -158,8 +158,8 @@ def update_sample_state(wa_id, language, page):
         db[wa_id]["sample_language"] = language
         db[wa_id]["sample_page"] = page
 
-def send_screen(wa_id, screen_id):
-    screen = SCREENS.get(screen_id)
+def send_screen(wa_id, screen_id, override_screen=None):
+    screen = override_screen if override_screen else SCREENS.get(screen_id)
     if not screen:
         return
     
@@ -259,9 +259,12 @@ def process_incoming_message(body):
                 img_url = f"{base_url}static/samples/{lang}/{img}"
                 send_message(get_image_message_input(wa_id, img_url))
                 
+            import time
+            time.sleep(0.5)
+                
             has_more = len(images) > end_idx
             
-        if has_more:
+        if has_more and page == 0:
             update_sample_state(wa_id, lang, page + 1)
             next_screen = "sample_more"
         else:
@@ -308,13 +311,17 @@ def process_incoming_message(body):
         trigger_count = sum(1 for section in viewed if section in SMART_CONVERSION_TRIGGERS)
         
         if trigger_count >= 2 and not conversion_triggered:
-            # Send the screen first, then the smart conversion message
-            if next_screen:
-                send_screen(wa_id, next_screen)
-            
             mark_smart_conversion_triggered(wa_id)
-            send_screen(wa_id, "smart_conversion")
-            return
+            if next_screen:
+                import copy
+                merged_screen = copy.deepcopy(SCREENS.get(next_screen))
+                if merged_screen:
+                    merged_screen["text"] = merged_screen["text"] + "\n\n" + SCREENS["smart_conversion"]["text"]
+                    send_screen(wa_id, next_screen, override_screen=merged_screen)
+                return
+            else:
+                send_screen(wa_id, "smart_conversion")
+                return
             
         if next_screen:
             send_screen(wa_id, next_screen)
