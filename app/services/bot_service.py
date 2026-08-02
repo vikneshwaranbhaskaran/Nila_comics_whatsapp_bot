@@ -357,7 +357,9 @@ def process_incoming_message(body):
                 send_screen(wa_id, "welcome")
             else:
                 response = process_text_for_whatsapp(response)
-                data = get_text_message_input(wa_id, response)
+                if len(response) > 1024:
+                    response = response[:1021] + "..."
+                data = get_interactive_button_message(wa_id, response, ["Home", "Support"])
                 send_message(data)
         else:
             unknown_count = get_unknown_count(wa_id) + 1
