@@ -256,13 +256,28 @@ def process_incoming_message(body):
             end_idx = start_idx + 4
             current_images = images[start_idx:end_idx]
             
+            sent_ok = 0
             for img in current_images:
                 img_url = f"{base_url}static/samples/{lang}/{img}"
-                send_message(get_image_message_input(wa_id, img_url))
-                # WhatsApp fetches/processes each linked image server-side before
-                # delivering it, so back-to-back sends can still arrive out of order.
-                # Spacing them out reduces images arriving out of order among themselves.
+                result = send_message(get_image_message_input(wa_id, img_url))
+                # send_message returns a (jsonify(...), status_code) tuple on failure,
+                # or the raw requests.Response on success - only the latter means Meta
+                # actually accepted the send.
+                if isinstance(result, tuple):
+                    logging.error(f"Image send FAILED for {wa_id}: {img_url} -> {result}")
+                else:
+                    sent_ok += 1
                 time.sleep(1.0)
+
+            if sent_ok < len(current_images):
+                logging.warning(
+                    f"Sample images for {wa_id}: only {sent_ok}/{len(current_images)} sent successfully. "
+                    f"img_url base was '{base_url}' - if this host isn't publicly reachable by Meta's "
+                    f"servers (e.g. a bare ngrok URL behind its browser-warning interstitial, or localhost), "
+                    f"Meta silently fails to fetch the image."
+                )
+            else:
+                logging.info(f"Sample images for {wa_id}: all {sent_ok} sent successfully.")
 
             # Extra buffer so the last image has time to actually reach the device
             # before the follow-up text/button prompt, which delivers almost instantly.
@@ -355,3 +370,4 @@ def process_incoming_message(body):
                 send_screen(wa_id, "unknown_repeated")
             else:
                 send_screen(wa_id, "unknown_first")
+
