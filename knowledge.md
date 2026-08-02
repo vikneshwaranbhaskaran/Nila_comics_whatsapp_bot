@@ -70,12 +70,7 @@ Need help choosing? I'm here to guide you.
 
 How can I help you today?
 
-Buttons: Explore Collection, Price, Read Sample, Delivery, Buy Now, Ask a Question, Support
-
-**Explore Collection:**
-Choose your preferred language.
-
-Buttons: Tamil Edition, English Edition, Home, Support
+Buttons: Price, Read Sample, Delivery, Buy Now, Ask a Question, Support
 
 **Tamil Edition / English Edition (shared template):**
 ✔ Beautiful Full Colour Artwork
@@ -174,7 +169,7 @@ Buttons: Buy Single Volume, Buy All 5 Volumes, Continue Browsing
 
 Please choose one of the options below.
 
-Buttons: Explore Collection, Read Sample, Price, Delivery, FAQs, Buy Now, Home, Support
+Buttons: Read Sample, Price, Delivery, FAQs, Buy Now, Home, Support
 
 **Unknown/random input (3rd+ consecutive miss):**
 😊 I'm sorry, I still couldn't understand your request.

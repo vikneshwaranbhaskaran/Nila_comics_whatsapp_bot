@@ -24,7 +24,7 @@ def get_text_message_input(recipient, text):
         }
     )
 
-def get_image_message_input(recipient, link):
+def get_image_message_input(recipient, link, is_id=False):
     return json.dumps(
         {
             "messaging_product": "whatsapp",
@@ -32,7 +32,7 @@ def get_image_message_input(recipient, link):
             "to": recipient,
             "type": "image",
             "image": {
-                "link": link
+                ("id" if is_id else "link"): link
             }
         }
     )
@@ -173,4 +173,5 @@ def is_valid_whatsapp_message(body):
         and body["entry"][0]["changes"][0]["value"].get("messages")
         and body["entry"][0]["changes"][0]["value"]["messages"][0]
     )
+
 

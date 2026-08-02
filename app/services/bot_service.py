@@ -15,12 +15,7 @@ from app.utils.whatsapp_utils import (
 SCREENS = {
     "welcome": {
         "text": "👋 Vanakkam! Welcome to Nila Comics\n\nExperience Kalki's legendary Ponniyin Selvan through beautifully illustrated full-colour comics.\n\n📚 Available in Tamil and English\n\nNeed help choosing? I'm here to guide you.\n\nHow can I help you today?",
-        "options": ["Explore Collection", "Price", "Read Sample", "Delivery", "Buy Now", "Ask a Question", "Support"],
-        "type": "list"
-    },
-    "explore": {
-        "text": "Choose your preferred language.",
-        "options": ["Tamil Edition", "English Edition", "Home", "Support"],
+        "options": ["Price", "Read Sample", "Delivery", "Buy Now", "Ask a Question", "Support"],
         "type": "list"
     },
     "edition": {
@@ -220,8 +215,6 @@ def process_incoming_message(body):
 
     if cmd in ["home", "hi", "hello", "hey", "vanakkam", "go back to home"]:
         next_screen = "welcome"
-    elif cmd == "explore collection":
-        next_screen = "explore"
     elif cmd in ["tamil edition", "english edition"]:
         next_screen = "edition"
     elif cmd == "price":
@@ -256,32 +249,36 @@ def process_incoming_message(body):
             end_idx = start_idx + 4
             current_images = images[start_idx:end_idx]
             
+            from app.utils.media_uploader import get_cached_media_id
+            
             sent_ok = 0
             for img in current_images:
-                img_url = f"{base_url}static/samples/{lang}/{img}"
-                result = send_message(get_image_message_input(wa_id, img_url))
+                img_path = os.path.join(samples_dir, img)
+                media_id = get_cached_media_id(img_path)
+                
+                if media_id:
+                    result = send_message(get_image_message_input(wa_id, media_id, is_id=True))
+                else:
+                    img_url = f"{base_url}static/samples/{lang}/{img}"
+                    result = send_message(get_image_message_input(wa_id, img_url, is_id=False))
+                    
                 # send_message returns a (jsonify(...), status_code) tuple on failure,
                 # or the raw requests.Response on success - only the latter means Meta
                 # actually accepted the send.
                 if isinstance(result, tuple):
-                    logging.error(f"Image send FAILED for {wa_id}: {img_url} -> {result}")
+                    logging.error(f"Image send FAILED for {wa_id}: {img} -> {result}")
                 else:
                     sent_ok += 1
-                time.sleep(1.0)
+                
+                # Small delay to ensure order is preserved in WhatsApp chat
+                time.sleep(0.5)
 
             if sent_ok < len(current_images):
                 logging.warning(
-                    f"Sample images for {wa_id}: only {sent_ok}/{len(current_images)} sent successfully. "
-                    f"img_url base was '{base_url}' - if this host isn't publicly reachable by Meta's "
-                    f"servers (e.g. a bare ngrok URL behind its browser-warning interstitial, or localhost), "
-                    f"Meta silently fails to fetch the image."
+                    f"Sample images for {wa_id}: only {sent_ok}/{len(current_images)} sent successfully."
                 )
             else:
                 logging.info(f"Sample images for {wa_id}: all {sent_ok} sent successfully.")
-
-            # Extra buffer so the last image has time to actually reach the device
-            # before the follow-up text/button prompt, which delivers almost instantly.
-            time.sleep(4.0)
 
             has_more = len(images) > end_idx
             
