@@ -262,11 +262,11 @@ def process_incoming_message(body):
                 # WhatsApp fetches/processes each linked image server-side before
                 # delivering it, so back-to-back sends can still arrive out of order.
                 # Spacing them out reduces images arriving out of order among themselves.
-                time.sleep(0.4)
+                time.sleep(1.0)
 
             # Extra buffer so the last image has time to actually reach the device
             # before the follow-up text/button prompt, which delivers almost instantly.
-            time.sleep(2.0)
+            time.sleep(4.0)
 
             has_more = len(images) > end_idx
             
