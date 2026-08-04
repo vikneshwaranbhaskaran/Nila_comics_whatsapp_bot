@@ -99,7 +99,7 @@ Buttons: Buy Single Volume, Buy All 5 Volumes, Home, Support
 
 🎉 Save ₹751 when you purchase the complete collection.
 
-Buttons: Buy Single Volume, Buy All 5 Volumes, Delivery Charges, Current Offers, Home, Support
+Buttons: Buy Single Volume, Buy All 5 Volumes, Delivery Charges, Home, Support
 
 **Discount:**
 🎁 Discount Information

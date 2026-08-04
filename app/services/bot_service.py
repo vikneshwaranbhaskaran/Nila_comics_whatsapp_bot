@@ -25,7 +25,7 @@ SCREENS = {
     },
     "price": {
         "text": "💰 Ponniyin Selvan Pricing\n\n📖 Single Volume\n₹750 per book\n\n📚 Complete Collection (5 Volumes)\n₹2,999 only\n\n🎉 Save ₹751 when you purchase the complete collection.\n\nThe complete collection is the best value and lets you enjoy the full story without interruption.",
-        "options": ["Buy Single Volume", "Buy All 5 Volumes", "Delivery Charges", "Current Offers", "Home", "Support"],
+        "options": ["Buy Single Volume", "Buy All 5 Volumes", "Delivery Charges", "Home", "Support"],
         "type": "list"
     },
     "discount": {
@@ -292,7 +292,7 @@ def process_incoming_message(body):
     elif cmd in ["delivery", "delivery charges"]:
         update_state(wa_id, "delivery")
         next_screen = "delivery"
-    elif cmd in ["current offers", "discount"]:
+    elif cmd == "discount":
         update_state(wa_id, "discount")
         next_screen = "discount"
     elif cmd == "product details":
